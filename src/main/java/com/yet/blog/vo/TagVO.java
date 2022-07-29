@@ -8,14 +8,15 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * @author Ekko
+ *
  * @date 2022/4/12 23:32
+ *
  * @description TagVO
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class TagVO {
-
 
     private Integer id;
 

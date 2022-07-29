@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ArchiveDto {
 
-  private Integer id;
+    private Integer id;
 
-  private String articleTitle;
+    private String articleTitle;
 
-  private LocalDateTime createTime;
+    private LocalDateTime createTime;
 }

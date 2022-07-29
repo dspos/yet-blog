@@ -1,6 +1,9 @@
 package com.yet.blog.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,13 +26,17 @@ import java.util.Objects;
 
 /**
  * @author Ekko
+ *
  * @date 2022/4/9 17:51
+ *
  * @description TagEntity
  */
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @DynamicInsert
 @EntityListeners(value = AuditingEntityListener.class)

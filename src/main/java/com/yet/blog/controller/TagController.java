@@ -34,41 +34,40 @@ import static com.yet.blog.constant.OptTypeConst.SAVE_OR_UPDATE;
 @RequestMapping("api")
 public class TagController {
 
-  private final TagService tagService;
+    private final TagService tagService;
 
-  public TagController(TagService tagService) {
-    this.tagService = tagService;
-  }
+    public TagController(TagService tagService) {
+        this.tagService = tagService;
+    }
 
-  @Operation(summary = "查询标签列表", description = "查询标签列表")
-  @OptLog(optType = QUERY)
-  @GetMapping("tags/{page}/{size}")
-  public Result<PageResult<TagDto>> listTags(
-      @PathVariable("page") Integer page, @PathVariable("size") Integer size) {
-    return Result.ok(tagService.listTags(page, size));
-  }
+    @Operation(summary = "查询标签列表", description = "查询标签列表")
+    @OptLog(optType = QUERY)
+    @GetMapping("tags/{page}/{size}")
+    public Result<PageResult<TagDto>> listTags(@PathVariable("page") Integer page, @PathVariable("size") Integer size) {
+        return Result.ok(tagService.listTags(page, size));
+    }
 
-  @Operation(summary = "查询后台标签列表", description = "查询后台标签列表")
-  @OptLog(optType = QUERY)
-  @GetMapping("admin/tags/{page}/{size}")
-  public Result<PageResult<TagBackDto>> listBackTags(
-      @PathVariable("page") Integer page, @PathVariable("size") Integer size) {
-    return Result.ok(tagService.listBackTags(page, size));
-  }
+    @Operation(summary = "查询后台标签列表", description = "查询后台标签列表")
+    // @OptLog(optType = QUERY)
+    @GetMapping("admin/tags/{page}/{size}")
+    public Result<PageResult<TagBackDto>> listBackTags(@PathVariable("page") Integer page,
+                                                       @PathVariable("size") Integer size) {
+        return Result.ok(tagService.listBackTags(page, size));
+    }
 
-  @Operation(summary = "新增或修改标签", description = "新增或修改标签")
-  @OptLog(optType = SAVE_OR_UPDATE)
-  @PostMapping("admin/tag")
-  public Result<Void> saveOrUpdateTag(@Valid @RequestBody TagVO tagVo) {
-    tagService.saveOrUpdateTag(tagVo);
-    return Result.ok();
-  }
+    @Operation(summary = "新增或修改标签", description = "新增或修改标签")
+    @OptLog(optType = SAVE_OR_UPDATE)
+    @PostMapping("admin/tag")
+    public Result<Void> saveOrUpdateTag(@Valid @RequestBody TagVO tagVo) {
+        tagService.saveOrUpdateTag(tagVo);
+        return Result.ok();
+    }
 
-  @Operation(summary = "批量删除标签", description = "批量删除标签")
-  @OptLog(optType = DELETE)
-  @DeleteMapping("admin/tag")
-  public Result<Void> deleteAllById(@RequestBody List<Integer> ids) {
-    tagService.deleteAllById(ids);
-    return Result.ok();
-  }
+    @Operation(summary = "批量删除标签", description = "批量删除标签")
+    @OptLog(optType = DELETE)
+    @DeleteMapping("admin/tag")
+    public Result<Void> deleteAllById(@RequestBody List<Integer> ids) {
+        tagService.deleteAllById(ids);
+        return Result.ok();
+    }
 }

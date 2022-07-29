@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author Ekko
+ *
  * @date 2022/4/15 16:28
+ *
  * @description ChatRecordRepository
  */
 @Repository

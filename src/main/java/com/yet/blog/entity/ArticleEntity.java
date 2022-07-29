@@ -1,6 +1,9 @@
 package com.yet.blog.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,17 +22,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 /**
  * @author Ekko
+ *
  * @date 2022/4/9 17:51
+ *
  * @description ArticleEntity
  */
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @DynamicInsert
 @EntityListeners(value = AuditingEntityListener.class)
@@ -63,7 +71,7 @@ public class ArticleEntity {
 
     @Basic
     @Column(name = "type")
-    private Byte type;
+    private Integer type;
 
     @Basic
     @Column(name = "original_url")
@@ -71,25 +79,25 @@ public class ArticleEntity {
 
     @Basic
     @Column(name = "is_top")
-    private Boolean isTop;
+    private Integer isTop;
 
     @Basic
     @Column(name = "is_delete")
-    private Boolean isDelete;
+    private Integer isDelete;
 
     @Basic
     @Column(name = "status")
-    private Byte status;
+    private Integer status;
 
     @Basic
     @CreatedDate
     @Column(name = "create_time")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     @Basic
     @LastModifiedDate
     @Column(name = "update_time")
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     @Override
     public boolean equals(Object o) {

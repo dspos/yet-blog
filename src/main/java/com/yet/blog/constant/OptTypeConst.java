@@ -2,7 +2,9 @@ package com.yet.blog.constant;
 
 /**
  * @author Ekko
+ *
  * @date 2022/4/10 0:33
+ *
  * @description OptTypeConst
  */
 public class OptTypeConst {

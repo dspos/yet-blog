@@ -1,13 +1,18 @@
 package com.yet.blog.service.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yet.blog.dto.ArchiveDto;
 import com.yet.blog.dto.ArticleBackDTO;
 import com.yet.blog.dto.ArticleHomeDto;
-import com.yet.blog.dto.ArticleHomeDtoTemp;
-import com.yet.blog.dto.TagDto;
 import com.yet.blog.entity.ArticleEntity;
+import com.yet.blog.entity.ArticleTagEntity;
+import com.yet.blog.entity.CategoryEntity;
+import com.yet.blog.entity.QArticleEntity;
+import com.yet.blog.entity.QArticleTagEntity;
+import com.yet.blog.entity.QCategoryEntity;
+import com.yet.blog.entity.QTagEntity;
+import com.yet.blog.entity.TagEntity;
 import com.yet.blog.repository.ArticleRepository;
 import com.yet.blog.repository.ArticleTagRepository;
 import com.yet.blog.repository.CategoryRepository;
@@ -15,26 +20,22 @@ import com.yet.blog.repository.TagRepository;
 import com.yet.blog.result.PageResult;
 import com.yet.blog.service.ArticleService;
 import com.yet.blog.util.BeanCopyUtil;
+import com.yet.blog.vo.ArticleDeleteVO;
+import com.yet.blog.vo.ArticleTopVO;
+import com.yet.blog.vo.ArticleVO;
 import com.yet.blog.vo.ConditionVO;
 import lombok.SneakyThrows;
-import org.hibernate.query.internal.NativeQueryImpl;
-import org.hibernate.transform.Transformers;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import static com.yet.blog.constant.CommonConst.DRAFT;
 import static com.yet.blog.constant.CommonConst.FALSE;
 import static com.yet.blog.constant.CommonConst.PUBLIC;
 
@@ -46,110 +47,175 @@ import static com.yet.blog.constant.CommonConst.PUBLIC;
 @Service
 public class ArticleServiceImpl implements ArticleService {
 
-  @PersistenceContext private EntityManager entityManager;
+    @PersistenceContext
+    EntityManager entityManager;
 
-  private final ArticleRepository articleRepository;
+    private final JPAQueryFactory jpaQueryFactory;
 
-  private final CategoryRepository categoryRepository;
+    private final ArticleRepository articleRepository;
 
-  private final TagRepository tagRepository;
+    private final CategoryRepository categoryRepository;
 
-  private final ArticleTagRepository articleTagRepository;
+    private final TagRepository tagRepository;
 
-  public ArticleServiceImpl(
-      ArticleRepository articleRepository,
-      CategoryRepository categoryRepository,
-      TagRepository tagRepository,
-      ArticleTagRepository articleTagRepository) {
-    this.articleRepository = articleRepository;
-    this.categoryRepository = categoryRepository;
-    this.tagRepository = tagRepository;
-    this.articleTagRepository = articleTagRepository;
-  }
+    private final ArticleTagRepository articleTagRepository;
 
-  @Override
-  public PageResult<ArchiveDto> listArchives(Integer page, Integer size) {
-    Specification<ArticleEntity> specification =
-        (root, query, criteriaBuilder) -> {
-          List<Predicate> predicates = new ArrayList<>();
-          predicates.add(criteriaBuilder.equal(root.get("isDelete"), FALSE));
-          predicates.add(criteriaBuilder.equal(root.get("status"), PUBLIC));
-          return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
-    Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createTime"));
-    List<ArticleEntity> articleList =
-        articleRepository.findAll(specification, pageable).getContent();
-    List<ArchiveDto> archiveDtoList = BeanCopyUtil.copyBeanList(articleList, ArchiveDto.class);
-    Integer count = Math.toIntExact(articleRepository.count());
-    return new PageResult<>(archiveDtoList, count);
-  }
-
-  @SneakyThrows
-  @Override
-  public List<ArticleHomeDto> listArticles(Integer page, Integer size) {
-    String sql =
-        "SELECT a.id,article_cover,article_title,SUBSTR(article_content,1,500 ) AS article_content,a.create_time,"
-            + "a.type,a.is_top,a.category_id,category_name,t.id AS tag_id,t.tag_name\n"
-            + "FROM(SELECT id,article_cover,article_title,article_content,type,is_top,create_time,category_id FROM tb_article\n"
-            + "    WHERE is_delete = 0 AND status = 1 ORDER BY is_top DESC, id DESC LIMIT :page OFFSET :size ) a\n"
-            + "    JOIN tb_category c ON a.category_id = c.id\n"
-            + "    JOIN tb_article_tag atg ON a.id = atg.article_id\n"
-            + "    JOIN tb_tag t ON t.id = atg.tag_id\n"
-            + "ORDER BY a.is_top DESC,a.id DESC";
-    Query nativeQuery = entityManager.createNativeQuery(sql);
-    nativeQuery.setParameter("page", page);
-    nativeQuery.setParameter("size", size - 1);
-    nativeQuery
-        .unwrap(NativeQueryImpl.class)
-        .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-    List<ArticleHomeDtoTemp> articleHomeDtoTempList = nativeQuery.getResultList();
-    String s = new ObjectMapper().writeValueAsString(articleHomeDtoTempList);
-    List<ArticleHomeDtoTemp> resultList = new ObjectMapper().readValue(s, new TypeReference<>() {});
-    return new ArrayList<>(
-        resultList.stream()
-            .map(
-                articleHomeDtoTemp -> {
-                  var articleHomeDto = new ArticleHomeDto();
-                  var tagDto = new TagDto();
-                  List<TagDto> tagDtoList = new ArrayList<>();
-                  tagDto.setId(articleHomeDtoTemp.getTag_id());
-                  tagDto.setTagName(articleHomeDtoTemp.getTag_name());
-                  tagDtoList.add(tagDto);
-                  articleHomeDto.setTagDTOList(tagDtoList);
-                  articleHomeDto.setId(articleHomeDtoTemp.getId());
-                  articleHomeDto.setArticleCover(articleHomeDtoTemp.getArticle_cover());
-                  articleHomeDto.setArticleTitle(articleHomeDtoTemp.getArticle_title());
-                  articleHomeDto.setArticleContent(articleHomeDtoTemp.getArticle_content());
-                  articleHomeDto.setCreateTime(articleHomeDtoTemp.getCreate_time());
-                  articleHomeDto.setCategoryId(articleHomeDtoTemp.getCategory_id());
-                  articleHomeDto.setCategoryName(articleHomeDtoTemp.getCategory_name());
-                  articleHomeDto.setIsTop(articleHomeDtoTemp.getIs_top());
-                  articleHomeDto.setType(articleHomeDtoTemp.getType());
-                  return articleHomeDto;
-                })
-            .collect(
-                Collectors.toMap(
-                    ArticleHomeDto::getId,
-                    a -> a,
-                    (o1, o2) -> {
-                      o1.setTagDTOList(
-                          Stream.of(o1.getTagDTOList(), o2.getTagDTOList())
-                              .flatMap(Collection::stream)
-                              .collect(Collectors.toList()));
-                      return o1;
-                    }))
-            .values());
-  }
-
-  @Override
-  public PageResult<ArticleBackDTO> listArticleBacks(
-      Integer page, Integer size, ConditionVO conditionVO) {
-    var count = articleRepository.countArticleBacks(conditionVO);
-    if (count == 0) {
-      return new PageResult<>();
+    public ArticleServiceImpl(JPAQueryFactory jpaQueryFactory, ArticleRepository articleRepository,
+                              CategoryRepository categoryRepository, TagRepository tagRepository,
+                              ArticleTagRepository articleTagRepository) {
+        this.jpaQueryFactory = jpaQueryFactory;
+        this.articleRepository = articleRepository;
+        this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
+        this.articleTagRepository = articleTagRepository;
     }
-    List<ArticleBackDTO> articleBackDTOList =
-        articleRepository.listArticleBacks(page, size, conditionVO);
-    return new PageResult<>(articleBackDTOList, count);
-  }
+
+    @Override
+    public PageResult<ArchiveDto> listArchives(Integer page, Integer size) {
+        var qArticle = QArticleEntity.articleEntity;
+        var articleList = jpaQueryFactory.select(qArticle)
+                .from(qArticle)
+                .where(qArticle.status.eq(PUBLIC), qArticle.isDelete.eq(FALSE))
+                .offset((long) (page - 1) * size)
+                .limit(size).stream().collect(Collectors.toList());
+        var archiveDtoList = BeanCopyUtil.copyBeanList(articleList, ArchiveDto.class);
+        var count = Math.toIntExact(articleRepository.count());
+        return new PageResult<>(archiveDtoList, count);
+    }
+
+    @SneakyThrows
+    @Override
+    public List<ArticleHomeDto> listArticles(Integer page, Integer size) {
+        var qArticle = QArticleEntity.articleEntity;
+        var qArticleTag = QArticleTagEntity.articleTagEntity;
+        var qCategory = QCategoryEntity.categoryEntity;
+        var qTag = QTagEntity.tagEntity;
+        var bean = Projections.bean(ArticleHomeDto.class,
+                qArticle.id,
+                qArticle.articleCover,
+                qArticle.articleTitle,
+                qArticle.articleContent.substring(1, 500).as("article_content"),
+                qArticle.createTime,
+                qArticle.type,
+                qArticle.isTop,
+                qArticle.categoryId,
+                qCategory.categoryName,
+                qTag.id,
+                qTag.tagName);
+        return jpaQueryFactory.select(bean)
+                .from(qArticle)
+                .join(qCategory).on(qArticle.categoryId.eq(qCategory.id))
+                .join(qArticleTag).on(qArticle.id.eq(qArticleTag.articleId))
+                .join(qTag).on(qTag.id.eq(qArticleTag.tagId))
+                .where(qArticle.status.eq(PUBLIC), qArticle.isDelete.eq(FALSE))
+                .orderBy(qArticle.id.desc(), qArticle.isTop.desc())
+                .stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public PageResult<ArticleBackDTO> listArticleBacks(Integer page, Integer size, ConditionVO conditionVO) {
+        var count = articleRepository.countArticleBacks(conditionVO);
+        if (count == 0) {
+            return new PageResult<>();
+        }
+        var articleBackDTOList = articleRepository.listArticleBacks(page, size, conditionVO);
+        return new PageResult<>(articleBackDTOList, count);
+    }
+
+    @Transactional
+    @Override
+    public void saveOrUpdateArticle(ArticleVO articleVO) {
+        var category = saveArticleCategory(articleVO);
+        var article = BeanCopyUtil.copyObject(articleVO, ArticleEntity.class);
+        if (Objects.nonNull(category)) {
+            article.setCategoryId(category.getId());
+        }
+        article.setUserId(1);
+        articleRepository.save(article);
+        saveArticleTag(articleVO, article.getId());
+    }
+
+    @Override
+    public void updateArticleTop(ArticleTopVO articleTopVO) {
+        var article = ArticleEntity.builder()
+                .id(articleTopVO.getId())
+                .isTop(articleTopVO.getIsTop())
+                .build();
+        articleRepository.save(article);
+    }
+
+    @Override
+    public void updateArticleDelete(ArticleDeleteVO articleDeleteVO) {
+        var articleList = articleDeleteVO.getIdList().stream()
+                .map(id -> ArticleEntity.builder()
+                        .id(id)
+                        .isTop(FALSE)
+                        .isDelete(articleDeleteVO.getIsDelete())
+                        .build())
+                .collect(Collectors.toList());
+        articleRepository.saveAll(articleList);
+    }
+
+    private CategoryEntity saveArticleCategory(ArticleVO articleVO) {
+        var category = categoryRepository.findOneByCategoryName(articleVO.getCategoryName());
+        if (Objects.isNull(category) && !articleVO.getStatus().equals(DRAFT)) {
+            category = CategoryEntity.builder()
+                    .categoryName(articleVO.getCategoryName())
+                    .build();
+            categoryRepository.save(category);
+        }
+        return category;
+    }
+
+    private void saveArticleTag(ArticleVO articleVO, Integer articleId) {
+        var qArticleTag = QArticleTagEntity.articleTagEntity;
+        var qTag = QTagEntity.tagEntity;
+        if (Objects.nonNull(articleVO.getId())) {
+            jpaQueryFactory.delete(qArticleTag)
+                    .where(qArticleTag.articleId.eq(articleVO.getId()));
+        }
+        var tagNameList = articleVO.getTagNameList();
+        if (!CollectionUtils.isEmpty(tagNameList)) {
+            var existTagList = jpaQueryFactory.select(qTag)
+                    .from(qTag)
+                    .where(qTag.tagName.in(tagNameList))
+                    .stream().collect(Collectors.toList());
+            var existTagNameList = existTagList.stream()
+                    .map(TagEntity::getTagName)
+                    .collect(Collectors.toList());
+            var existTagIdList = existTagList.stream()
+                    .map(TagEntity::getId)
+                    .collect(Collectors.toList());
+            tagNameList.removeAll(existTagNameList);
+            if (!CollectionUtils.isEmpty(tagNameList)) {
+                var tagList = tagNameList.stream()
+                        .map(item -> TagEntity.builder().tagName(item).build())
+                        .collect(Collectors.toList());
+                for (int i = 0; i < tagList.size(); i++) {
+                    if (i > 0 && i % 10 == 0) {
+                        entityManager.flush();
+                        entityManager.clear();
+                    }
+                    TagEntity tag = tagList.get(i);
+                    entityManager.persist(tag);
+                }
+                var tagIdList = tagList.stream()
+                        .map(TagEntity::getId)
+                        .collect(Collectors.toList());
+                existTagIdList.addAll(tagIdList);
+            }
+            var articleTagList = existTagIdList.stream()
+                    .map(item -> ArticleTagEntity.builder().articleId(articleId).tagId(item).build())
+                    .collect(Collectors.toList());
+            jpaQueryFactory.delete(qArticleTag).where(qArticleTag.articleId.eq(articleId)).execute();
+            for (int i = 0; i < articleTagList.size(); i++) {
+                if (i > 0 && i % 10 == 0) {
+                    entityManager.flush();
+                    entityManager.clear();
+                }
+                ArticleTagEntity articleTag = articleTagList.get(i);
+                entityManager.persist(articleTag);
+            }
+        }
+    }
 }
