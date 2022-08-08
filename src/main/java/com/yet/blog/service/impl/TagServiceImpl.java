@@ -16,7 +16,6 @@ import com.yet.blog.vo.TagVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/9 20:03
- *
  * @description TagServiceImpl
  */
 @Service
@@ -45,18 +42,25 @@ public class TagServiceImpl implements TagService {
     public PageResult<TagBackDto> listBackTags(Integer page, Integer size) {
         var qTag = QTagEntity.tagEntity;
         var qArticleTag = QArticleTagEntity.articleTagEntity;
-        var bean = Projections.bean(TagBackDto.class,
-                qTag.id,
-                qTag.tagName,
-                qArticleTag.articleId.count().as("articleCount"),
-                qTag.createTime);
-        List<TagBackDto> tagBackDtoList = jpaQueryFactory.select(bean)
-                .from(qTag)
-                .leftJoin(qArticleTag).on(qTag.id.eq(qArticleTag.tagId))
-                .groupBy(qTag.id)
-                .orderBy(qTag.id.desc())
-                .offset((long) (page - 1) * size).limit(size)
-                .stream().collect(Collectors.toList());
+        var bean =
+                Projections.bean(
+                        TagBackDto.class,
+                        qTag.id,
+                        qTag.tagName,
+                        qArticleTag.articleId.count().as("articleCount"),
+                        qTag.createTime);
+        List<TagBackDto> tagBackDtoList =
+                jpaQueryFactory
+                        .select(bean)
+                        .from(qTag)
+                        .leftJoin(qArticleTag)
+                        .on(qTag.id.eq(qArticleTag.tagId))
+                        .groupBy(qTag.id)
+                        .orderBy(qTag.id.desc())
+                        .offset((long) (page - 1) * size)
+                        .limit(size)
+                        .stream()
+                        .collect(Collectors.toList());
         Integer count = Math.toIntExact(tagRepository.count());
         return new PageResult<>(tagBackDtoList, count);
     }

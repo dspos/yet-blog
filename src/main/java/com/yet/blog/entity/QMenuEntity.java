@@ -18,7 +18,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QMenuEntity extends EntityPathBase<MenuEntity> {
 
-    private static final long serialVersionUID = -1230932940L;
+    private static final long serialVersionUID = - 1230932940L;
 
     public static final QMenuEntity menuEntity = new QMenuEntity("menuEntity");
 

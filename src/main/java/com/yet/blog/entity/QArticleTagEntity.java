@@ -15,7 +15,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QArticleTagEntity extends EntityPathBase<ArticleTagEntity> {
 
-    private static final long serialVersionUID = -149653415L;
+    private static final long serialVersionUID = - 149653415L;
 
     public static final QArticleTagEntity articleTagEntity = new QArticleTagEntity("articleTagEntity");
 

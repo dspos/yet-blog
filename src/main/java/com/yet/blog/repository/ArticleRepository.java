@@ -1,6 +1,6 @@
 package com.yet.blog.repository;
 
-import com.yet.blog.dto.ArticleBackDTO;
+import com.yet.blog.dto.ArticleBackDTo;
 import com.yet.blog.entity.ArticleEntity;
 import com.yet.blog.vo.ConditionVO;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,9 +13,7 @@ import java.util.List;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/13 19:11
- *
  * @description ArticleRepository
  */
 @Repository
@@ -34,5 +32,5 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, Integer>
             + " AND id IN (SELECT article_id FROM tb_article_tag WHERE tag_id = :#{#conditionVO.tagId}) ORDER BY is_top DESC,id DESC LIMIT :page OFFSET :size) a \n"
             + "LEFT JOIN tb_category c ON a.category_id = c.id LEFT JOIN tb_article_tag atg ON a.id = atg.article_id LEFT JOIN tb_tag t ON t.id = atg.tag_id "
             + "ORDER BY is_top DESC,a.id DESC", nativeQuery = true)
-    List<ArticleBackDTO> listArticleBacks(Integer page, Integer size, ConditionVO conditionVO);
+    List<ArticleBackDTo> listArticleBacks(Integer page, Integer size, ConditionVO conditionVO);
 }

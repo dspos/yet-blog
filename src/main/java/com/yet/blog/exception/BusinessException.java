@@ -8,9 +8,7 @@ import static com.yet.blog.constant.StatusCodeEnum.FAIL;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/10 2:26
- *
  * @description BusinessException
  */
 @Getter

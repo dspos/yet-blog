@@ -1,7 +1,7 @@
 package com.yet.blog.service;
 
 import com.yet.blog.dto.ArchiveDto;
-import com.yet.blog.dto.ArticleBackDTO;
+import com.yet.blog.dto.ArticleBackDTo;
 import com.yet.blog.dto.ArticleHomeDto;
 import com.yet.blog.result.PageResult;
 import com.yet.blog.vo.ArticleDeleteVO;
@@ -44,7 +44,7 @@ public interface ArticleService {
      * @param conditionVO conditionVO
      * @return PageResult<ArticleBackDTO>
      */
-    PageResult<ArticleBackDTO> listArticleBacks(Integer page, Integer size, ConditionVO conditionVO);
+    PageResult<ArticleBackDTo> listArticleBacks(Integer page, Integer size, ConditionVO conditionVO);
 
     /**
      * save or update article

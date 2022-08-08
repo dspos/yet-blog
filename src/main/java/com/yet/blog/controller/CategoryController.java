@@ -25,9 +25,7 @@ import static com.yet.blog.constant.OptTypeConst.SAVE_OR_UPDATE;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/12 23:24
- *
  * @description CategoryController
  */
 @Tag(name = "Category", description = "分类接口")
@@ -43,15 +41,15 @@ public class CategoryController {
 
     @Operation(summary = "查询分类列表", description = "查询分类列表")
     @GetMapping("categories/{page}/{size}")
-    public Result<PageResult<CategoryDto>> listCategories(@PathVariable("page") Integer page,
-            @PathVariable("size") Integer size) {
+    public Result<PageResult<CategoryDto>> listCategories(
+            @PathVariable("page") Integer page, @PathVariable("size") Integer size) {
         return Result.ok(categoryService.listCategories(page, size));
     }
 
     @Operation(summary = "查询后台分类列表", description = "查询后台分类列表")
     @GetMapping("admin/categories/{page}/{size}")
-    public Result<PageResult<CategoryBackDto>> listBackCategories(@PathVariable("page") Integer page,
-            @PathVariable("size") Integer size) {
+    public Result<PageResult<CategoryBackDto>> listBackCategories(
+            @PathVariable("page") Integer page, @PathVariable("size") Integer size) {
         return Result.ok(categoryService.listBackCategories(page, size));
     }
 

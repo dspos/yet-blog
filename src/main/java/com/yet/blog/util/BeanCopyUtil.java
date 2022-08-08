@@ -17,8 +17,10 @@ public class BeanCopyUtil {
         T temp;
         try {
             temp = target.getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | InvocationTargetException | IllegalAccessException |
-                 NoSuchMethodException e) {
+        } catch (InstantiationException
+                 | InvocationTargetException
+                 | IllegalAccessException
+                 | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
         if (null != source) {

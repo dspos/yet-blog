@@ -6,9 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/9 20:05
- *
  * @description TagDto
  */
 @Data
@@ -19,5 +17,4 @@ public class TagDto {
     private Integer id;
 
     private String tagName;
-
 }

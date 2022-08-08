@@ -24,8 +24,11 @@ public class HibernateListenerConfig {
     @PostConstruct
     protected void init() {
         SessionFactoryImpl sessionFactory = emf.unwrap(SessionFactoryImpl.class);
-        EventListenerRegistry registry = sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
+        EventListenerRegistry registry =
+                sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
         registry.getEventListenerGroup(EventType.MERGE).clearListeners();
-        registry.getEventListenerGroup(EventType.MERGE).prependListener(JpaIgnoreNullEventListener.INSTANCE);
+        registry
+                .getEventListenerGroup(EventType.MERGE)
+                .prependListener(JpaIgnoreNullEventListener.INSTANCE);
     }
 }

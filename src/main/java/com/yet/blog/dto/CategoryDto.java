@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/10 21:35
- *
  * @description CategoryDto
  */
 @Schema(name = "CategoryDto", description = "分类Dto")

@@ -16,5 +16,4 @@ public class CommonConst {
     public static final int SECRET = 2;
 
     public static final int DRAFT = 3;
-
 }

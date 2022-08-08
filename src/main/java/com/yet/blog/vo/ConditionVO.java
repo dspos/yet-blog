@@ -13,43 +13,68 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ConditionVO {
 
-    /** 页码 */
+    /**
+     * 页码
+     */
     private Long current;
 
-    /** 条数 */
+    /**
+     * 条数
+     */
     private Long size;
 
-    /** 搜索内容 */
+    /**
+     * 搜索内容
+     */
     private String keywords;
 
-    /** 分类id */
+    /**
+     * 分类id
+     */
     private Integer categoryId;
 
-    /** 标签id */
+    /**
+     * 标签id
+     */
     private Integer tagId;
 
-    /** 相册id */
+    /**
+     * 相册id
+     */
     private Integer albumId;
 
-    /** 登录类型 */
+    /**
+     * 登录类型
+     */
     private Integer loginType;
 
-    /** 类型 */
+    /**
+     * 类型
+     */
     private Integer type;
 
-    /** 状态 */
+    /**
+     * 状态
+     */
     private Integer status;
 
-    /** 开始时间 */
+    /**
+     * 开始时间
+     */
     private LocalDateTime startTime;
 
-    /** 结束时间 */
+    /**
+     * 结束时间
+     */
     private LocalDateTime endTime;
 
-    /** 是否删除 */
+    /**
+     * 是否删除
+     */
     private Integer isDelete;
 
-    /** 是否审核 */
+    /**
+     * 是否审核
+     */
     private Integer isReview;
-
 }

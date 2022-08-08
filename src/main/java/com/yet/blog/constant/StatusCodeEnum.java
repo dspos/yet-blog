@@ -7,9 +7,8 @@ import lombok.Getter;
  * 接口状态码枚举
  *
  * @author yezhqiu
- *
  * @date 2021/06/11
- **/
+ */
 @Getter
 @AllArgsConstructor
 public enum StatusCodeEnum {
@@ -59,5 +58,4 @@ public enum StatusCodeEnum {
      * 描述
      */
     private final String desc;
-
 }

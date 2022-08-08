@@ -18,7 +18,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QCommentEntity extends EntityPathBase<CommentEntity> {
 
-    private static final long serialVersionUID = -33695792L;
+    private static final long serialVersionUID = - 33695792L;
 
     public static final QCommentEntity commentEntity = new QCommentEntity("commentEntity");
 

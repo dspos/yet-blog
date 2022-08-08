@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/9 19:45
- *
  * @description OperationLogRepository
  */
 @Repository

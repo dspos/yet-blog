@@ -1,9 +1,7 @@
 package com.yet.blog.service.impl;
 
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.QBean;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.yet.blog.dto.ArticleHomeDto;
 import com.yet.blog.dto.CategoryBackDto;
 import com.yet.blog.dto.CategoryDto;
 import com.yet.blog.entity.CategoryEntity;
@@ -17,8 +15,6 @@ import com.yet.blog.util.BeanCopyUtil;
 import com.yet.blog.vo.CategoryVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +32,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(JPAQueryFactory jpaQueryFactory, CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(
+            JPAQueryFactory jpaQueryFactory, CategoryRepository categoryRepository) {
         this.jpaQueryFactory = jpaQueryFactory;
         this.categoryRepository = categoryRepository;
     }
@@ -54,15 +51,25 @@ public class CategoryServiceImpl implements CategoryService {
     public PageResult<CategoryBackDto> listBackCategories(Integer page, Integer size) {
         var qCategory = QCategoryEntity.categoryEntity;
         var qArticle = QArticleEntity.articleEntity;
-        var bean = Projections.bean(CategoryBackDto.class, qCategory.id, qCategory.categoryName,
-                qArticle.id.count().as("articleCount"), qCategory.createTime);
-        var categoryBackDtoList = jpaQueryFactory.select(bean)
-                .from(qCategory)
-                .leftJoin(qArticle).on(qCategory.id.eq(qArticle.categoryId))
-                .groupBy(qCategory.id)
-                .orderBy(qCategory.id.asc())
-                .offset((long) (page - 1) * size).limit(size)
-                .stream().collect(Collectors.toList());
+        var bean =
+                Projections.bean(
+                        CategoryBackDto.class,
+                        qCategory.id,
+                        qCategory.categoryName,
+                        qArticle.id.count().as("articleCount"),
+                        qCategory.createTime);
+        var categoryBackDtoList =
+                jpaQueryFactory
+                        .select(bean)
+                        .from(qCategory)
+                        .leftJoin(qArticle)
+                        .on(qCategory.id.eq(qArticle.categoryId))
+                        .groupBy(qCategory.id)
+                        .orderBy(qCategory.id.asc())
+                        .offset((long) (page - 1) * size)
+                        .limit(size)
+                        .stream()
+                        .collect(Collectors.toList());
         var count = Math.toIntExact(categoryRepository.count());
         return new PageResult<>(categoryBackDtoList, count);
     }

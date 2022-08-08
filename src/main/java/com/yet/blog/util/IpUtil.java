@@ -22,9 +22,7 @@ public class IpUtil {
     /**
      * 获取用户ip地址
      *
-     * @param request
-     *            请求
-     *
+     * @param request 请求
      * @return ip地址
      */
     public static String getIpAddress(HttpServletRequest request) {
@@ -66,17 +64,19 @@ public class IpUtil {
     /**
      * 解析ip地址
      *
-     * @param ipAddress
-     *            ip地址
-     *
+     * @param ipAddress ip地址
      * @return 解析后的ip地址
      */
     public static String getIpSource(String ipAddress) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            URL url = new URL("http://opendata.baidu.com/api.php?query=" + ipAddress + "&co=&resource_id=6006&oe=utf8");
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(url.openConnection().getInputStream(), "utf-8"));
+            URL url =
+                    new URL(
+                            "http://opendata.baidu.com/api.php?query="
+                                    + ipAddress
+                                    + "&co=&resource_id=6006&oe=utf8");
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(url.openConnection().getInputStream(), "utf-8"));
             String line = null;
             StringBuffer result = new StringBuffer();
             while ((line = reader.readLine()) != null) {

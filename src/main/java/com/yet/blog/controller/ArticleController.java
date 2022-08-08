@@ -1,7 +1,7 @@
 package com.yet.blog.controller;
 
 import com.yet.blog.dto.ArchiveDto;
-import com.yet.blog.dto.ArticleBackDTO;
+import com.yet.blog.dto.ArticleBackDTo;
 import com.yet.blog.dto.ArticleHomeDto;
 import com.yet.blog.result.PageResult;
 import com.yet.blog.result.Result;
@@ -42,23 +42,24 @@ public class ArticleController {
 
     @Operation(summary = "list archives article")
     @GetMapping("article/archives/{page}/{size}")
-    public Result<PageResult<ArchiveDto>> listArchives(@PathVariable("page") Integer page,
-                                                       @PathVariable("size") Integer size) {
+    public Result<PageResult<ArchiveDto>> listArchives(
+            @PathVariable("page") Integer page, @PathVariable("size") Integer size) {
         return Result.ok(articleService.listArchives(page, size));
     }
 
     @Operation(summary = "list homepage article")
     @GetMapping("/articles/{page}/{size}")
-    public Result<List<ArticleHomeDto>> listArticles(@PathVariable("page") Integer page,
-                                                     @PathVariable("size") Integer size) {
+    public Result<List<ArticleHomeDto>> listArticles(
+            @PathVariable("page") Integer page, @PathVariable("size") Integer size) {
         return Result.ok(articleService.listArticles(page, size));
     }
 
     @Operation(summary = "list backend article")
     @GetMapping("/admin/articles/{page}/{size}")
-    public Result<PageResult<ArticleBackDTO>> listArticleBacks(@PathVariable("page") Integer page,
-                                                               @PathVariable("size") Integer size,
-                                                               ConditionVO conditionVO) {
+    public Result<PageResult<ArticleBackDTo>> listArticleBacks(
+            @PathVariable("page") Integer page,
+            @PathVariable("size") Integer size,
+            ConditionVO conditionVO) {
         return Result.ok(articleService.listArticleBacks(page, size, conditionVO));
     }
 

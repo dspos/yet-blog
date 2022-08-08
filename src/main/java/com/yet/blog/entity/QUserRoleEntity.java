@@ -15,7 +15,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QUserRoleEntity extends EntityPathBase<UserRoleEntity> {
 
-    private static final long serialVersionUID = -1835770058L;
+    private static final long serialVersionUID = - 1835770058L;
 
     public static final QUserRoleEntity userRoleEntity = new QUserRoleEntity("userRoleEntity");
 

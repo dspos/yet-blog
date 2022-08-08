@@ -14,9 +14,7 @@ import static com.yet.blog.constant.StatusCodeEnum.VALID_ERROR;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/10 2:28
- *
  * @description BusExceptionHandler
  */
 @Slf4j
@@ -26,9 +24,7 @@ public class BusExceptionHandler {
     /**
      * 处理服务异常
      *
-     * @param e
-     *            异常
-     *
+     * @param e 异常
      * @return 接口异常信息
      */
     @ExceptionHandler(value = BusinessException.class)
@@ -39,9 +35,7 @@ public class BusExceptionHandler {
     /**
      * 处理参数校验异常
      *
-     * @param e
-     *            异常
-     *
+     * @param e 异常
      * @return 接口异常信息
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -53,9 +47,7 @@ public class BusExceptionHandler {
     /**
      * 处理系统异常
      *
-     * @param e
-     *            异常
-     *
+     * @param e 异常
      * @return 接口异常信息
      */
     @ExceptionHandler(value = Exception.class)

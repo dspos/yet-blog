@@ -5,14 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/13 0:11
- *
  * @description 后台分类Dto
  */
 @Schema(name = "CategoryBackDto", description = "后台分类Dto")

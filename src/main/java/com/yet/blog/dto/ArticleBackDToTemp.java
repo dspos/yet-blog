@@ -6,54 +6,74 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/13 23:29
- *
- * @description ArticleBackDTO
+ * @description ArticleBackDTOTemp
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ArticleBackDTO {
+public class ArticleBackDToTemp {
 
-    /** id */
+    /**
+     * id
+     */
     private Integer id;
 
-    /** 文章封面 */
+    /**
+     * 文章封面
+     */
     private String articleCover;
 
-    /** 标题 */
+    /**
+     * 标题
+     */
     private String articleTitle;
 
-    /** 发表时间 */
+    /**
+     * 发表时间
+     */
     private LocalDateTime createTime;
 
-    /** 点赞量 */
+    /**
+     * 点赞量
+     */
     private Integer likeCount;
 
-    /** 浏览量 */
+    /**
+     * 浏览量
+     */
     private Integer viewsCount;
 
-    /** 文章分类名 */
+    /**
+     * 文章分类名
+     */
     private String categoryName;
 
-    /** 文章标签 */
-    private List<TagDto> tagDTOList;
+    private Integer tagId;
 
-    /** 文章类型 */
+    private String tagName;
+
+    /**
+     * 文章类型
+     */
     private Integer type;
 
-    /** 是否置顶 */
+    /**
+     * 是否置顶
+     */
     private Integer isTop;
 
-    /** 是否删除 */
+    /**
+     * 是否删除
+     */
     private Integer isDelete;
 
-    /** 文章状态 */
+    /**
+     * 文章状态
+     */
     private Integer status;
 }

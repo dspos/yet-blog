@@ -7,11 +7,10 @@ import lombok.Getter;
  * @author: Ekko
  * @create: 2022/07/29
  * @description:
- **/
+ */
 @Getter
 @AllArgsConstructor
 public enum ArticleStatusEnum {
-
     PUBLIC(1, "PUBLIC"),
 
     SECRET(2, "SECRET"),

@@ -22,9 +22,7 @@ import java.util.Objects;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/9 17:51
- *
  * @description OperationLogEntity
  */
 @Getter

@@ -8,9 +8,7 @@ import java.util.Date;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/15 17:24
- *
  * @description ArticleHomeDtoTemp
  */
 @Data
@@ -19,24 +17,23 @@ import java.util.Date;
 public class ArticleHomeDtoTemp {
     private Integer id;
 
-    private String article_cover;
+    private String articleCover;
 
-    private String article_title;
+    private String articleTitle;
 
-    private String article_content;
+    private String articleContent;
 
-    private Date create_time;
+    private Date createTime;
 
-    private Integer is_top;
+    private Integer isTop;
 
     private Integer type;
 
-    private Integer category_id;
+    private Integer categoryId;
 
-    private String category_name;
+    private String categoryName;
 
-    private Integer tag_id;
+    private Integer tagId;
 
-    private String tag_name;
-
+    private String tagName;
 }

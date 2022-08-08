@@ -43,15 +43,16 @@ public class TagController {
     @Operation(summary = "查询标签列表", description = "查询标签列表")
     @OptLog(optType = QUERY)
     @GetMapping("tags/{page}/{size}")
-    public Result<PageResult<TagDto>> listTags(@PathVariable("page") Integer page, @PathVariable("size") Integer size) {
+    public Result<PageResult<TagDto>> listTags(
+            @PathVariable("page") Integer page, @PathVariable("size") Integer size) {
         return Result.ok(tagService.listTags(page, size));
     }
 
     @Operation(summary = "查询后台标签列表", description = "查询后台标签列表")
     // @OptLog(optType = QUERY)
     @GetMapping("admin/tags/{page}/{size}")
-    public Result<PageResult<TagBackDto>> listBackTags(@PathVariable("page") Integer page,
-                                                       @PathVariable("size") Integer size) {
+    public Result<PageResult<TagBackDto>> listBackTags(
+            @PathVariable("page") Integer page, @PathVariable("size") Integer size) {
         return Result.ok(tagService.listBackTags(page, size));
     }
 

@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @author Ekko
- *
  * @date 2022/4/12 23:25
- *
  * @description CategoryRepository
  */
 @Repository
@@ -17,9 +15,7 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, Intege
     /**
      * 根据分类名称查询分类
      *
-     * @param categoryName
-     *            categoryName
-     *
+     * @param categoryName categoryName
      * @return CategoryEntity
      */
     CategoryEntity findOneByCategoryName(String categoryName);

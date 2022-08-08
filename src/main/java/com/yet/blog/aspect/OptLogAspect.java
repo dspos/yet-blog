@@ -56,8 +56,10 @@ public class OptLogAspect {
         // 获取RequestAttributes
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         // 从获取RequestAttributes中获取HttpServletRequest的信息
-        HttpServletRequest request = (HttpServletRequest) Objects.requireNonNull(requestAttributes)
-                .resolveReference(RequestAttributes.REFERENCE_REQUEST);
+        HttpServletRequest request =
+                (HttpServletRequest)
+                        Objects.requireNonNull(requestAttributes)
+                                .resolveReference(RequestAttributes.REFERENCE_REQUEST);
         OperationLogEntity operationLog = new OperationLogEntity();
         // 从切面织入点处通过反射机制获取织入点处的方法
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -98,5 +100,4 @@ public class OptLogAspect {
         operationLog.setOptUrl(request.getRequestURI());
         operationLogRepository.save(operationLog);
     }
-
 }
